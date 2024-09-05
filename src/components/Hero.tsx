@@ -1,4 +1,4 @@
-"use client";  
+// src/components/Hero.tsx
 import React from 'react';
 import { motion } from 'framer-motion';
 
