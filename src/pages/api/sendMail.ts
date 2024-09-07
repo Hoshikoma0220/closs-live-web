@@ -22,6 +22,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       const { name, email, message, category } = fields;
 
+      // `email` が配列の可能性があるので、最初の要素を使用
+      const emailAddress = Array.isArray(email) ? email[0] : email;
+
       // ファイルを取得
       const file = files.file as formidable.File | undefined;
 
@@ -35,14 +38,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
 
       const mailOptions = {
-        from: email,
+        from: emailAddress, // `emailAddress` を使用して、単一のメールアドレスにする
         to: 'your-email@example.com', // 受信先のメールアドレス
         subject: `お問い合わせ: ${name} (${category})`,
         text: `メッセージ: ${message}\n\nカテゴリ: ${category}\n\n名前: ${name}\nメール: ${email}`,
         attachments: file
           ? [
               {
-                filename: file.originalFilename,
+                filename: file.originalFilename || '', // filename が null の場合は空文字にする
                 path: file.filepath,
               },
             ]
